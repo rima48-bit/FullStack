@@ -13,13 +13,16 @@
 Cargo writes thousands of small files to `target/` during compilation.
 OneDrive locks these files mid-build and causes:
 
-Access is denied. (os error 5)
+> ⚠️ `Access is denied. (os error 5)`
 
 Clone or move the project to a plain path like `C:\dev\nova`.
 
 **Icons — required before first build**
 
-`src-tauri/icons/` is not committed to the repo. On first clone, the build will fail with:icons/icon.ico not found; required for generating a Windows Resource file
+`src-tauri/icons/` is not committed to the repo. On first clone, the build will fail with:
+
+> ⚠️ `` `icons/icon.ico` not found; required for generating a Windows Resource file ``
+
 Generate them once from any square PNG:
 
 ```bash
@@ -43,6 +46,10 @@ On Windows, to reset `node_modules`:
 Remove-Item -Recurse -Force node_modules
 ```
 
+**Version mismatch warning**
+
+You may see a warning about mismatched Rust crate and npm package versions.
+This is cosmetic — do not upgrade packages to match. The project will build and run correctly.
 **Version mismatch warning**
 
 You may see a warning about mismatched Rust crate and npm package versions.
