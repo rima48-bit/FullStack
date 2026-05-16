@@ -1,82 +1,30 @@
-# FullStack
-```mermaid
-sequenceDiagram
-    participant browser
-    participant server
+### Contributor setup notes
 
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
-    activate server
-    server-->>browser: HTML document
-    deactivate server
+**Verify prerequisites before cloning**
+- `rustc --version` — 1.77+
+- `node --version` — 20+
 
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
-    activate server
-    server-->>browser: the css file
-    deactivate server
+**Windows:** Keep the project outside OneDrive. Cargo writes thousands
+of small files to `target/` and OneDrive locks them mid-build, causing
+`Access is denied (os error 5)`. Use a path like `C:\dev\nova`.
 
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
-    activate server
-    server-->>browser: the JavaScript file
-    deactivate server
-
-    Note right of browser: The browser starts executing the JavaScript code that fetches the JSON from the server
-
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
-    activate server
-    server-->>browser: [{ "content": "HTML is easy", "date": "2023-1-1" }, ... ]
-    deactivate server
-
-    Note right of browser: The browser executes the callback function that renders the notes
+**Icons:** `src-tauri/icons/` is not committed to the repo. On Windows
+the first build will fail with `` `icons/icon.ico` not found ``. Fix:
+```bash
+npx tauri icon "your-image.png"  # any square PNG works
 ```
 
-
-
-```mermaid
-sequenceDiagram
-    participant browser
-    participant server
-
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa
-    activate server
-    server-->>browser: HTML document
-    deactivate server
-
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
-    activate server
-    server-->>browser: CSS file
-    deactivate server
-
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
-    activate server
-    server-->>browser: JavaScript file
-    deactivate server
-
-    Note right of browser: JavaScript runs in the browser
-
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
-    activate server
-    server-->>browser: JSON data for notes
-    deactivate server
-
-    Note right of browser: JavaScript renders notes dynamically without reloading the page
+**Linux:** The apt-get block above may need these additional packages
+depending on your distro version:
+```bash
+build-essential libxdo-dev libgtk-3-dev
 ```
 
+**Clean install:** Always use `npm ci` not `npm install`.
+On Windows: `Remove-Item -Recurse -Force node_modules` to clear the folder.
 
-
-```mermaid
-sequenceDiagram
-    participant browser
-    participant server
-
-    Note right of browser: User types in the note and clicks "Save"
-
-    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa (with note data in JSON)
-    activate server
-    server-->>browser: JSON response confirming note saved
-    deactivate server
-
-    Note right of browser: JavaScript adds the new note to the list in memory
-
-    Note right of browser: Page is updated dynamically without reloading
-```
-
+**Version mismatch warning:** A warning about mismatched Rust/npm versions
+is cosmetic — do not bump npm package versions to match.
+```sh
+rustup target add aarch64-apple-darwin x86_64-apple-darwin
+npm run tauri build -- --target universal-apple-darwin
