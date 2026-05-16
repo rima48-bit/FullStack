@@ -3,13 +3,13 @@
 **Verify prerequisites before cloning**
 - `rustc --version` — 1.77+
 - `node --version` — 20+
+- `npx tauri --version` — Tauri CLI 2.x
 
 **Windows:** Keep the project outside OneDrive. Cargo writes thousands
 of small files to `target/` and OneDrive locks them mid-build, causing
 `Access is denied (os error 5)`. Use a path like `C:\dev\nova`.
 
-**Icons:** `src-tauri/icons/` is not committed to the repo. On Windows
-the first build will fail with `` `icons/icon.ico` not found ``. Fix:
+**Icons(first build requirement):** `src-tauri/icons/` is not committed to the repository. On first build, Windows users may see: `` `icons/icon.ico` not found ``. Fix:
 ```bash
 npx tauri icon "your-image.png"  # any square PNG works
 ```
@@ -17,14 +17,12 @@ npx tauri icon "your-image.png"  # any square PNG works
 **Linux:** The apt-get block above may need these additional packages
 depending on your distro version:
 ```bash
-build-essential libxdo-dev libgtk-3-dev
+sudo apt-get install build-essential libxdo-dev libgtk-3-dev
 ```
 
-**Clean install:** Always use `npm ci` not `npm install`.
-On Windows: `Remove-Item -Recurse -Force node_modules` to clear the folder.
+**Clean install:** Always use lockfile-based install: `npm ci` not `npm install`.
+To reset dependencies on Windows: `Remove-Item -Recurse -Force node_modules`.
 
 **Version mismatch warning:** A warning about mismatched Rust/npm versions
-is cosmetic — do not bump npm package versions to match.
-```sh
-rustup target add aarch64-apple-darwin x86_64-apple-darwin
-npm run tauri build -- --target universal-apple-darwin
+is cosmetic — Do not upgrade dependencies solely to match versions
+            —  The project will still build and run correctly
